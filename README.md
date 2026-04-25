@@ -64,23 +64,13 @@ ProjetAlgo/
 
 ---
 
-## ⚙️ Build & Run
-
-### On Linux / Mac
-```bash
-make        # compile
-make run    # compile + run
-make report # compile + run + save output to report.txt
-make clean  # remove build files
-```
+## ⚙️ Run
 
 ### On Windows (PowerShell)
 ```powershell
 gcc main.c graph.c routing.c analytics.c -o traffic -lm
 .\traffic.exe
 ```
-
----
 
 ## 📊 Simulation Phases
 
