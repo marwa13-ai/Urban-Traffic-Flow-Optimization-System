@@ -77,7 +77,6 @@ make clean  # remove build files
 ### On Windows (PowerShell)
 ```powershell
 gcc main.c graph.c routing.c analytics.c -o traffic -lm
-chcp 65001        # fix UTF-8 display
 .\traffic.exe
 ```
 
