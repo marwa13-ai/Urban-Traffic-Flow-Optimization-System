@@ -8,9 +8,9 @@
 #include <float.h>
 #include <math.h>
 
-/* ─────────────────────────────────────────────
+/* ---------------------------------------------
    CONSTANTS
-   ───────────────────────────────────────────── */
+   --------------------------------------------- */
 #define MAX_NODES        10000
 #define INF              DBL_MAX
 #define MAX_PATH_LEN     10000
@@ -22,9 +22,9 @@
 #define STATUS_INCIDENT  1
 #define STATUS_CLOSED    2
 
-/* ─────────────────────────────────────────────
+/* ---------------------------------------------
    EDGE  (Adjacency-List node)
-   ───────────────────────────────────────────── */
+   --------------------------------------------- */
 typedef struct Edge {
     int    target;          /* destination intersection  */
     double weight;          /* current travel cost (time)*/
@@ -33,9 +33,9 @@ typedef struct Edge {
     struct Edge *next;
 } Edge;
 
-/* ─────────────────────────────────────────────
+/* ---------------------------------------------
    INTERSECTION  (vertex metadata)
-   ───────────────────────────────────────────── */
+   --------------------------------------------- */
 typedef struct {
     int    id;
     int    row, col;        /* grid position             */
@@ -43,27 +43,27 @@ typedef struct {
     double congestion;      /* 0.0 – 1.0                 */
 } Intersection;
 
-/* ─────────────────────────────────────────────
+/* ---------------------------------------------
    GRAPH  (Adjacency-List representation)
-   ───────────────────────────────────────────── */
+   --------------------------------------------- */
 typedef struct {
     int            num_nodes;
     int            num_edges;
-    Edge         **adj;         /* adj[v] → linked list of edges */
+    Edge         **adj;         /* adj[v] -> linked list of edges */
     Intersection  *nodes;       /* vertex metadata array         */
 } Graph;
 
-/* ─────────────────────────────────────────────
+/* ---------------------------------------------
    ADJACENCY MATRIX  (for comparison)
-   ───────────────────────────────────────────── */
+   --------------------------------------------- */
 typedef struct {
     int     size;
     double **matrix;
 } AdjMatrix;
 
-/* ─────────────────────────────────────────────
+/* ---------------------------------------------
    ROUTE RESULT
-   ───────────────────────────────────────────── */
+   --------------------------------------------- */
 typedef struct {
     int    path[MAX_PATH_LEN];
     int    length;          /* number of nodes in path   */
@@ -72,9 +72,9 @@ typedef struct {
     double compute_ms;      /* wall-clock time in ms     */
 } Route;
 
-/* ─────────────────────────────────────────────
+/* ---------------------------------------------
    TRAFFIC EVENT  (simulation log entry)
-   ───────────────────────────────────────────── */
+   --------------------------------------------- */
 typedef struct {
     int    from, to;
     double old_weight, new_weight;
@@ -82,9 +82,9 @@ typedef struct {
     int    timestep;
 } TrafficEvent;
 
-/* ─────────────────────────────────────────────
+/* ---------------------------------------------
    FUNCTION PROTOTYPES – graph.c
-   ───────────────────────────────────────────── */
+   --------------------------------------------- */
 Graph    *create_graph(int num_nodes);
 void      free_graph(Graph *g);
 void      add_road(Graph *g, int from, int to, double weight, int bidirectional);
@@ -99,17 +99,17 @@ AdjMatrix *create_adj_matrix(int size);
 void       free_adj_matrix(AdjMatrix *m);
 void       set_matrix_edge(AdjMatrix *m, int from, int to, double w, int bidi);
 
-/* ─────────────────────────────────────────────
+/* ---------------------------------------------
    FUNCTION PROTOTYPES – routing.c
-   ───────────────────────────────────────────── */
+   --------------------------------------------- */
 Route bfs_shortest_path(Graph *g, int src, int dst);
 Route dijkstra_shortest_path(Graph *g, int src, int dst);
 Route congestion_aware_route(Graph *g, int src, int dst, double congestion_penalty);
 void  print_route(Graph *g, Route *r, const char *label);
 
-/* ─────────────────────────────────────────────
+/* ---------------------------------------------
    FUNCTION PROTOTYPES – analytics.c
-   ───────────────────────────────────────────── */
+   --------------------------------------------- */
 typedef struct {
     int    nodes;
     int    edges;

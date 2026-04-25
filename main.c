@@ -1,41 +1,24 @@
 /*
- * ╔══════════════════════════════════════════════════════════════════════╗
- * ║        URBAN TRAFFIC FLOW OPTIMIZATION SYSTEM                      ║
- * ║        main.c — Simulation Control & User Interface                ║
- * ╚══════════════════════════════════════════════════════════════════════╝
- *
- * Modules:
- *   graph.c    — City-network construction & traffic updates
- *   routing.c  — BFS (shortest distance) + Dijkstra (shortest time)
- *                + Congestion-aware routing
- *   analytics.c— Memory profiling, scalability benchmarks
- *
- * Usage:
- *   ./traffic            — run full simulation + analytics
- *   ./traffic > out.txt  — capture results to file
+ * ================================================================
+ *   URBAN TRAFFIC FLOW OPTIMIZATION SYSTEM
+ *   main.c -- Simulation Control & User Interface
+ * ================================================================
  */
 
 #include "graph.h"
 
-/* ──────────────────────────────────────────────
-   FORWARD DECLARATIONS (main-local helpers)
-   ────────────────────────────────────────────── */
 static void print_banner(void);
 static void demo_basic_routing(Graph *g, int src, int dst);
 static void simulate_traffic(Graph *g, int steps, int src, int dst);
 static void demo_rerouting(Graph *g, int src, int dst);
 static void run_all_analytics(Graph *g, int src, int dst);
 
-/* ══════════════════════════════════════════════
-   ENTRY POINT
-   ══════════════════════════════════════════════ */
 int main(void) {
     print_banner();
 
-    /* ── 1. Build a 10×10 city grid (100 intersections) ── */
-    printf("═══════════════════════════════════════════════\n");
-    printf("  PHASE 1 — CITY NETWORK CONSTRUCTION\n");
-    printf("═══════════════════════════════════════════════\n");
+    printf("===============================================\n");
+    printf("  PHASE 1 - CITY NETWORK CONSTRUCTION\n");
+    printf("===============================================\n");
 
     int rows = GRID_ROWS, cols = GRID_COLS;
     Graph *g = build_grid_graph(rows, cols);
@@ -49,61 +32,51 @@ int main(void) {
     printf("\n  Sample topology (first 20 nodes):\n");
     print_graph(g);
 
-    /* ── 2. Static routing ── */
     int src = 0;
     int dst = g->num_nodes - 1;
 
-    printf("\n═══════════════════════════════════════════════\n");
-    printf("  PHASE 2 — STATIC ROUTING  (%s → %s)\n",
+    printf("\n===============================================\n");
+    printf("  PHASE 2 - STATIC ROUTING  (%s -> %s)\n",
            g->nodes[src].name, g->nodes[dst].name);
-    printf("═══════════════════════════════════════════════\n");
+    printf("===============================================\n");
     demo_basic_routing(g, src, dst);
 
-    /* ── 3. Dynamic traffic simulation & rerouting ── */
-    printf("\n═══════════════════════════════════════════════\n");
-    printf("  PHASE 3 — DYNAMIC TRAFFIC SIMULATION\n");
-    printf("═══════════════════════════════════════════════\n");
+    printf("\n===============================================\n");
+    printf("  PHASE 3 - DYNAMIC TRAFFIC SIMULATION\n");
+    printf("===============================================\n");
     simulate_traffic(g, 5, src, dst);
 
-    /* ── 4. Incident-driven rerouting demo ── */
-    printf("\n═══════════════════════════════════════════════\n");
-    printf("  PHASE 4 — INCIDENT & ROAD-CLOSURE REROUTING\n");
-    printf("═══════════════════════════════════════════════\n");
+    printf("\n===============================================\n");
+    printf("  PHASE 4 - INCIDENT & ROAD-CLOSURE REROUTING\n");
+    printf("===============================================\n");
     demo_rerouting(g, src, dst);
 
-    /* ── 5. Empirical analytics ── */
-    printf("\n═══════════════════════════════════════════════\n");
-    printf("  PHASE 5 — EMPIRICAL PERFORMANCE ANALYSIS\n");
-    printf("═══════════════════════════════════════════════\n");
+    printf("\n===============================================\n");
+    printf("  PHASE 5 - EMPIRICAL PERFORMANCE ANALYSIS\n");
+    printf("===============================================\n");
     run_all_analytics(g, src, dst);
 
     free_graph(g);
 
-    printf("\n╔══════════════════════════════════════════════╗\n");
-    printf("║  Simulation complete. All memory freed.    ║\n");
-    printf("╚══════════════════════════════════════════════╝\n");
+    printf("\n================================================\n");
+    printf("  Simulation complete. All memory freed.\n");
+    printf("================================================\n");
     return 0;
 }
 
-/* ══════════════════════════════════════════════
-   BANNER
-   ══════════════════════════════════════════════ */
 static void print_banner(void) {
     printf("\n");
-    printf("╔══════════════════════════════════════════════════════════════╗\n");
-    printf("║                                                            ║\n");
-    printf("║   URBAN TRAFFIC FLOW OPTIMIZATION SYSTEM                  ║\n");
-    printf("║   Dynamic Graph Routing & Analytics Framework             ║\n");
-    printf("║                                                            ║\n");
-    printf("║   Algorithms : BFS · Dijkstra · Congestion-Aware          ║\n");
-    printf("║   Structures  : Adjacency List · Adjacency Matrix          ║\n");
-    printf("║                                                            ║\n");
-    printf("╚══════════════════════════════════════════════════════════════╝\n\n");
+    printf("================================================================\n");
+    printf("                                                                \n");
+    printf("   URBAN TRAFFIC FLOW OPTIMIZATION SYSTEM                      \n");
+    printf("   Dynamic Graph Routing & Analytics Framework                  \n");
+    printf("                                                                \n");
+    printf("   Algorithms : BFS | Dijkstra | Congestion-Aware              \n");
+    printf("   Structures : Adjacency List | Adjacency Matrix               \n");
+    printf("                                                                \n");
+    printf("================================================================\n\n");
 }
 
-/* ══════════════════════════════════════════════
-   PHASE 2 — STATIC ROUTING DEMO
-   ══════════════════════════════════════════════ */
 static void demo_basic_routing(Graph *g, int src, int dst) {
     printf("  Source      : node %d (%s)\n", src, g->nodes[src].name);
     printf("  Destination : node %d (%s)\n", dst, g->nodes[dst].name);
@@ -112,13 +85,13 @@ static void demo_basic_routing(Graph *g, int src, int dst) {
     Route rdijk = dijkstra_shortest_path(g, src, dst);
     Route rcong = congestion_aware_route(g, src, dst, 2.0);
 
-    print_route(g, &rbfs,  "BFS  — Shortest Distance (min hops)");
-    print_route(g, &rdijk, "Dijkstra — Shortest Time  (min cost)");
+    print_route(g, &rbfs,  "BFS  - Shortest Distance (min hops)");
+    print_route(g, &rdijk, "Dijkstra - Shortest Time  (min cost)");
     print_route(g, &rcong, "Congestion-Aware Routing  (penalty=2.0)");
 
-    printf("\n  ── Algorithm Comparison ──\n");
-    printf("  BFS    cost : %.4f  (hops: %d)\n", rbfs.total_weight,  rbfs.hops);
-    printf("  Dijkstra    : %.4f  (hops: %d) — %.2f%% better\n",
+    printf("\n  -- Algorithm Comparison --\n");
+    printf("  BFS    cost : %.4f  (hops: %d)\n", rbfs.total_weight, rbfs.hops);
+    printf("  Dijkstra    : %.4f  (hops: %d) - %.2f%% better\n",
            rdijk.total_weight, rdijk.hops,
            (rbfs.total_weight > 0 && rbfs.total_weight < INF)
                ? (rbfs.total_weight - rdijk.total_weight) / rbfs.total_weight * 100.0
@@ -128,11 +101,6 @@ static void demo_basic_routing(Graph *g, int src, int dst) {
     printf("  Cong  time  : %.4f ms\n", rcong.compute_ms);
 }
 
-/* ══════════════════════════════════════════════
-   PHASE 3 — SIMULATION LOOP
-   Each step: randomly increase 5–10 edge weights,
-   then recompute routes and show changes.
-   ══════════════════════════════════════════════ */
 static void simulate_traffic(Graph *g, int steps, int src, int dst) {
     srand((unsigned)time(NULL));
     int n = g->num_nodes;
@@ -144,9 +112,8 @@ static void simulate_traffic(Graph *g, int steps, int src, int dst) {
     prev_dijkstra.length = 0;
 
     for (int step = 1; step <= steps; step++) {
-        printf("  ─── Time Step %d ───────────────────────────\n", step);
+        printf("  --- Time Step %d -----------------------------------\n", step);
 
-        /* Select 5–10 random edges and spike their weights */
         int num_updates = 5 + rand() % 6;
         int changed = 0;
 
@@ -155,18 +122,17 @@ static void simulate_traffic(Graph *g, int steps, int src, int dst) {
             Edge *e  = g->adj[from];
             if (!e) continue;
 
-            /* Pick a random edge from this node's list */
             int hops = rand() % 5;
             for (int h = 0; h < hops && e->next; h++) e = e->next;
 
             double old_w = e->weight;
-            double mult  = 1.5 + (rand() % 30) / 10.0; /* 1.5× – 4.5× */
+            double mult  = 1.5 + (rand() % 30) / 10.0;
             double new_w = e->base_weight * mult;
 
             if (fabs(old_w - new_w) > 0.01) {
                 update_traffic(g, from, e->target, new_w);
-                if (changed < 5) { /* print first 5 for readability */
-                    printf("    Incident: %s→%s  %.2f → %.2f (×%.1f)\n",
+                if (changed < 5) {
+                    printf("    Incident: %s->%s  %.2f -> %.2f (x%.1f)\n",
                            g->nodes[from].name,
                            g->nodes[e->target].name,
                            old_w, new_w, mult);
@@ -177,7 +143,6 @@ static void simulate_traffic(Graph *g, int steps, int src, int dst) {
         if (changed > 5)
             printf("    ... (%d additional updates suppressed)\n", changed - 5);
 
-        /* Re-route */
         Route rdijk = dijkstra_shortest_path(g, src, dst);
         Route rcong = congestion_aware_route(g, src, dst, 2.0);
 
@@ -185,7 +150,7 @@ static void simulate_traffic(Graph *g, int steps, int src, int dst) {
                              rdijk.hops != prev_dijkstra.hops);
         printf("    Dijkstra cost  : %.4f (hops: %d)%s\n",
                rdijk.total_weight, rdijk.hops,
-               route_changed ? "  ← REROUTED!" : "");
+               route_changed ? "  <-- REROUTED!" : "");
         printf("    Congestion cost: %.4f (hops: %d)\n",
                rcong.total_weight, rcong.hops);
 
@@ -195,43 +160,36 @@ static void simulate_traffic(Graph *g, int steps, int src, int dst) {
     printf("  [Simulation complete]\n");
 }
 
-/* ══════════════════════════════════════════════
-   PHASE 4 — INCIDENT / CLOSURE REROUTING DEMO
-   Deliberately block the Dijkstra optimal path
-   then show the system finds a new route.
-   ══════════════════════════════════════════════ */
 static void demo_rerouting(Graph *g, int src, int dst) {
     reset_traffic(g);
 
-    printf("  Step A — Baseline Dijkstra route:\n");
+    printf("  Step A - Baseline Dijkstra route:\n");
     Route r_before = dijkstra_shortest_path(g, src, dst);
     print_route(g, &r_before, "Before incident");
 
-    /* Apply incidents on every edge of that path */
-    printf("\n  Step B — Applying ROAD CLOSURE on optimal-path edges...\n");
+    printf("\n  Step B - Applying ROAD CLOSURE on optimal-path edges...\n");
     if (r_before.length >= 2) {
         for (int i = 0; i + 1 < r_before.length; i++) {
             int u = r_before.path[i];
             int v = r_before.path[i + 1];
             apply_incident(g, u, v, STATUS_CLOSED);
-            apply_incident(g, v, u, STATUS_CLOSED); /* block reverse too */
-            printf("    CLOSED: %s ↔ %s\n",
+            apply_incident(g, v, u, STATUS_CLOSED);
+            printf("    CLOSED: %s <-> %s\n",
                    g->nodes[u].name, g->nodes[v].name);
         }
     } else {
-        /* If path is too short, block random critical edges */
         printf("    Blocking first row of edges as demonstration...\n");
         for (int i = 0; i < g->num_nodes / 10 && i < 5; i++) {
             Edge *e = g->adj[i];
             if (e) {
                 apply_incident(g, i, e->target, STATUS_CLOSED);
-                printf("    CLOSED: %s → %s\n",
+                printf("    CLOSED: %s -> %s\n",
                        g->nodes[i].name, g->nodes[e->target].name);
             }
         }
     }
 
-    printf("\n  Step C — Rerouting around closure:\n");
+    printf("\n  Step C - Rerouting around closure:\n");
     Route r_after_dijk = dijkstra_shortest_path(g, src, dst);
     Route r_after_cong = congestion_aware_route(g, src, dst, 3.0);
     Route r_after_bfs  = bfs_shortest_path(g, src, dst);
@@ -241,43 +199,35 @@ static void demo_rerouting(Graph *g, int src, int dst) {
     print_route(g, &r_after_bfs,  "BFS (post-closure)");
 
     if (r_after_dijk.length == 0)
-        printf("  [Dijkstra: no path exists — network partitioned!]\n");
+        printf("  [Dijkstra: no path exists - network partitioned!]\n");
 
-    /* Also demo an INCIDENT (not full closure) */
-    printf("\n  Step D — INCIDENT scenario (3.5× delay, not closed):\n");
+    printf("\n  Step D - INCIDENT scenario (3.5x delay, not closed):\n");
     reset_traffic(g);
     int mid = g->num_nodes / 2;
     if (g->adj[mid]) {
         apply_incident(g, mid, g->adj[mid]->target, STATUS_INCIDENT);
-        printf("  Incident applied on: %s → %s (weight ×3.5)\n",
+        printf("  Incident applied on: %s -> %s (weight x3.5)\n",
                g->nodes[mid].name, g->nodes[g->adj[mid]->target].name);
     }
     Route ri_dijk = dijkstra_shortest_path(g, src, dst);
     Route ri_cong = congestion_aware_route(g, src, dst, 2.0);
-    printf("  Dijkstra     : cost=%.4f, hops=%d\n", ri_dijk.total_weight, ri_dijk.hops);
+    printf("  Dijkstra        : cost=%.4f, hops=%d\n", ri_dijk.total_weight, ri_dijk.hops);
     printf("  Congestion-Aware: cost=%.4f, hops=%d\n", ri_cong.total_weight, ri_cong.hops);
 
     reset_traffic(g);
 }
 
-/* ══════════════════════════════════════════════
-   PHASE 5 — ALL ANALYTICS
-   ══════════════════════════════════════════════ */
 static void run_all_analytics(Graph *g, int src, int dst) {
-    /* a) Scalability study */
     run_scalability_study();
 
-    /* b) Update-frequency study on the main 10×10 graph */
     reset_traffic(g);
     run_update_frequency_study(g, src, dst);
 
-    /* c) Representation comparison */
     compare_representations(1000);
 
-    /* d) Path quality: BFS vs Dijkstra across multiple src/dst pairs */
-    printf("\n╔══════════════════════════════════════════════════════════════════╗\n");
-    printf("║      PATH QUALITY: BFS vs. DIJKSTRA (10 random pairs)         ║\n");
-    printf("╚══════════════════════════════════════════════════════════════════╝\n");
+    printf("\n================================================================\n");
+    printf("   PATH QUALITY: BFS vs. DIJKSTRA (10 random pairs)\n");
+    printf("================================================================\n");
     printf("\n%-8s %-8s %-12s %-12s %-12s %-10s\n",
            "Src", "Dst", "BFS_cost", "Dijk_cost", "Savings", "Savings%");
     printf("-------- -------- ------------ ------------ ------------ ----------\n");
@@ -314,22 +264,21 @@ static void run_all_analytics(Graph *g, int src, int dst) {
     if (valid > 0)
         printf("  Average Dijkstra savings vs BFS: %.2f%%\n", total_savings / valid);
 
-    /* e) Theoretical complexity summary */
-    printf("\n╔══════════════════════════════════════════════════════════════════╗\n");
-    printf("║         THEORETICAL COMPLEXITY SUMMARY                        ║\n");
-    printf("╚══════════════════════════════════════════════════════════════════╝\n");
-    printf("\n  Algorithm          Time Complexity   Space   Route Quality\n");
-    printf("  ─────────────────  ────────────────  ──────  ─────────────\n");
-    printf("  BFS                O(V + E)          O(V)    Min hops (not min cost)\n");
-    printf("  Dijkstra (array)   O(V²)             O(V)    Optimal (min cost)\n");
-    printf("  Dijkstra (heap)    O((V+E) log V)    O(V)    Optimal (min cost)\n");
-    printf("  Congestion-Aware   O(V²)             O(V)    Near-optimal (avoids jams)\n");
+    printf("\n================================================================\n");
+    printf("   THEORETICAL COMPLEXITY SUMMARY\n");
+    printf("================================================================\n");
+    printf("\n  Algorithm            Time Complexity     Space   Route Quality\n");
+    printf("  -----------------    ----------------    ------  -------------------\n");
+    printf("  BFS                  O(V + E)            O(V)    Min hops (not min cost)\n");
+    printf("  Dijkstra (array)     O(V^2)              O(V)    Optimal (min cost)\n");
+    printf("  Dijkstra (heap)      O((V+E) log V)      O(V)    Optimal (min cost)\n");
+    printf("  Congestion-Aware     O(V^2)              O(V)    Near-optimal (avoids jams)\n");
     printf("\n  Graph Representation:\n");
-    printf("  Adjacency List     O(V + E)  space   O(E)    edge traversal\n");
-    printf("  Adjacency Matrix   O(V²)     space   O(1)    edge lookup\n");
+    printf("  Adjacency List       O(V + E) space      O(E)    edge traversal\n");
+    printf("  Adjacency Matrix     O(V^2)   space      O(1)    edge lookup\n");
     printf("\n  Edge weight update:\n");
     printf("  List:   O(E/V) avg to find edge, then O(1) update\n");
-    printf("  Matrix: O(1) direct update — superior for frequent updates\n");
+    printf("  Matrix: O(1) direct update - superior for frequent updates\n");
     printf("\n  Rerouting: incremental updates avoid full recomputation;\n");
     printf("  only affected portions of the priority queue are revised.\n");
 }

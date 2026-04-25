@@ -1,8 +1,8 @@
 #include "graph.h"
 
-/* ══════════════════════════════════════════════════════════════
+/* ==============================================================
    INTERNAL HELPERS
-   ══════════════════════════════════════════════════════════════ */
+   ============================================================== */
 
 /* Reconstruct path from predecessor array */
 static int build_path(int *prev, int src, int dst, int *path_out) {
@@ -32,10 +32,10 @@ static double path_weight(Graph *g, int *path, int len) {
     return total;
 }
 
-/* ══════════════════════════════════════════════════════════════
+/* ==============================================================
    BFS  –  SHORTEST DISTANCE  (min hops)
    O(V + E)
-   ══════════════════════════════════════════════════════════════ */
+   ============================================================== */
 
 Route bfs_shortest_path(Graph *g, int src, int dst) {
     Route r;
@@ -96,12 +96,12 @@ Route bfs_shortest_path(Graph *g, int src, int dst) {
     return r;
 }
 
-/* ══════════════════════════════════════════════════════════════
+/* ==============================================================
    DIJKSTRA  –  SHORTEST TIME  (min weight)
    O((V + E) log V)  –  implemented with a simple array-based
    priority selection for portability; upgrade to min-heap for
    large-scale benchmarks (see analytics.c comments).
-   ══════════════════════════════════════════════════════════════ */
+   ============================================================== */
 
 Route dijkstra_shortest_path(Graph *g, int src, int dst) {
     Route r;
@@ -174,11 +174,11 @@ Route dijkstra_shortest_path(Graph *g, int src, int dst) {
     return r;
 }
 
-/* ══════════════════════════════════════════════════════════════
+/* ==============================================================
    CONGESTION-AWARE ROUTING
    Edge effective cost = weight * (1 + penalty * congestion_src)
    This biases routes away from heavily loaded intersections.
-   ══════════════════════════════════════════════════════════════ */
+   ============================================================== */
 
 Route congestion_aware_route(Graph *g, int src, int dst, double congestion_penalty) {
     Route r;
@@ -247,9 +247,9 @@ Route congestion_aware_route(Graph *g, int src, int dst, double congestion_penal
     return r;
 }
 
-/* ══════════════════════════════════════════════════════════════
+/* ==============================================================
    ROUTE PRINTING
-   ══════════════════════════════════════════════════════════════ */
+   ============================================================== */
 
 void print_route(Graph *g, Route *r, const char *label) {
     printf("\n  [%s]\n", label);

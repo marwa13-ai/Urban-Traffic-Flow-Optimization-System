@@ -1,8 +1,8 @@
 #include "graph.h"
 
-/* ══════════════════════════════════════════════════════════════
+/* ==============================================================
    GRAPH CREATION / DESTRUCTION
-   ══════════════════════════════════════════════════════════════ */
+   ============================================================== */
 
 Graph *create_graph(int num_nodes) {
     if (num_nodes <= 0 || num_nodes > MAX_NODES) return NULL;
@@ -48,9 +48,9 @@ void free_graph(Graph *g) {
     free(g);
 }
 
-/* ══════════════════════════════════════════════════════════════
+/* ==============================================================
    EDGE OPERATIONS
-   ══════════════════════════════════════════════════════════════ */
+   ============================================================== */
 
 void add_road(Graph *g, int from, int to, double weight, int bidirectional) {
     if (!g || from < 0 || to < 0 || from >= g->num_nodes || to >= g->num_nodes)
@@ -126,12 +126,12 @@ void reset_traffic(Graph *g) {
     }
 }
 
-/* ══════════════════════════════════════════════════════════════
+/* ==============================================================
    CITY GRID CONSTRUCTION
-   ══════════════════════════════════════════════════════════════ */
+   ============================================================== */
 
 /*
- * Build an R×C rectangular grid graph.
+ * Build an RxC rectangular grid graph.
  * Each intersection connects to its 4-directional neighbours.
  * Base weights are randomised [1.0, 5.0] to simulate varying road quality.
  */
@@ -183,9 +183,9 @@ void print_graph(Graph *g) {
         printf("  ... (%d more nodes not shown)\n", g->num_nodes - 20);
 }
 
-/* ══════════════════════════════════════════════════════════════
+/* ==============================================================
    ADJACENCY MATRIX  (for representation comparison)
-   ══════════════════════════════════════════════════════════════ */
+   ============================================================== */
 
 AdjMatrix *create_adj_matrix(int size) {
     AdjMatrix *m = (AdjMatrix *)malloc(sizeof(AdjMatrix));
