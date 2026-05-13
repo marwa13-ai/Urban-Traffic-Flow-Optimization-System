@@ -144,6 +144,5 @@ After closure:   R0C0 → ... → R9C9   cost = 42.50  (new path, all closures a
 
 ---
 
-## 👤 Author
-
+## 
 Project developed as part of an **Algorithms & Data Structures** course, implementing and empirically validating dynamic graph optimization techniques for urban mobility simulation.
